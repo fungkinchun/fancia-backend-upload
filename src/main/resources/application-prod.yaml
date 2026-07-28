@@ -1,0 +1,42 @@
+server:
+  servlet:
+    context-path: /${REPO_NAME}
+spring:
+  config:
+    import:
+      - aws-secretsmanager:${ENV}/${PROJECT_NAME}/s3
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_SERVICE_URL:auth-service}
+          jwk-set-uri: ${AUTH_INTERNAL_SERVICE_URL:${AUTH_SERVICE_URL:auth-service}}/oauth2/jwks
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: ${KUBERNETES_ENABLED:true}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    placeholders:
+      gis_admin_password: ${GIS_ADMIN_PASSWORD}
+app:
+  application-name: ${PROJECT_NAME}-backend-${REPO_NAME}
+  base-url: ${DOMAIN_NAME}/${REPO_NAME}/api
+  login-page-url: ${AUTH_SERVICE_URL:auth-service}/login
+  s3:
+    bucket-name: ${BUCKET_NAME}
+    access-key: ${BUCKET_ACCESS_KEY}
+    secret-key: ${BUCKET_SECRET_KEY}
+    base-url: ${BUCKET_ENDPOINT}
+    region: ${AWS_REGION}
+    storage-class: STANDARD
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    prometheus:
+      enabled: true

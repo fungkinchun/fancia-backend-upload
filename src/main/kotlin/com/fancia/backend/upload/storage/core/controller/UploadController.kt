@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/uploads")
+@RequestMapping("/api/v1/uploads")
 @Tag(name = "Uploads", description = "Presigned S3 upload URLs")
 @SecurityRequirement(name = "bearerAuth")
 class UploadController(
